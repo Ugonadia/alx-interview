@@ -1,38 +1,48 @@
+#!/usr/bin/python3
+"""Log parsing"""
+import signal
 import sys
 
-TOTAL_SIZE_IDX = 7
-STATUS_CODE_IDX = 8
 
-total_size = 0
-status_codes = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
-line_count = 0
+def print_stats(sum, status):
+    """
+    Function that print stats
+    """
 
-def print_stats():
-    global total_size, status_codes
-    print(f"File size: {total_size}")
-    for code in sorted(status_codes):
-        if status_codes[code] > 0:
-            print(f"{code}: {status_codes[code]}")
-    print()
+    print('File size: {}'.format(sum))
+    for key, value in sorted(status.items()):
+        if value != 0:
+            print('{}: {}'.format(key, value))
 
-try:
-    for line in sys.stdin:
-        try:
-            parts = line.strip().split()
-            if len(parts) != 10:
-                continue
-            if parts[2] != "GET" or parts[4] != "/projects/260" or parts[5] != "HTTP/1.1":
-                continue
-            size = int(parts[TOTAL_SIZE_IDX])
-            status = int(parts[STATUS_CODE_IDX])
-            total_size += size
-            if status in status_codes:
-                status_codes[status] += 1
-            line_count += 1
-            if line_count == 10:
-                print_stats()
-                line_count = 0
-        except:
-            continue
-except KeyboardInterrupt:
-    print_stats()
+if __name__ == '__main__':
+    sum_size = 0
+    status_code = {
+        '200': 0,
+        '301': 0,
+        '400': 0,
+        '401': 0,
+        '403': 0,
+        '404': 0,
+        '405': 0,
+        '500': 0
+    }
+
+    try:
+        i = 0
+        for line in sys.stdin:
+            args = line.split()
+            if len(args) > 6:
+                status = args[-2]
+                file_size = args[-1]
+                sum_size += int(file_size)
+                if status in status_code:
+                    i += 1
+                    status_code[status] += 1
+                    if i % 10 == 0:
+                        print_stats(sum_size, status_code)
+
+    except KeyboardInterrupt:
+        print_stats(sum_size, status_code)
+        raise
+    else:
+        print_stats(sum_size, status_code)
