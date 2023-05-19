@@ -1,6 +1,22 @@
 #!/usr/bin/python3
 def rotate_2d_matrix(matrix):
+    """
+    Rotate a 2D matrix 90 degrees clockwise in-place.
+
+    Args:
+        matrix (list[list]): The 2D matrix to rotate. The matrix must be square.
+
+    Returns:
+        None: The matrix is edited in-place.
+
+    Raises:
+        ValueError: If the matrix is not square (number of rows != number of columns).
+    """
+
     n = len(matrix)
+
+    if n != len(matrix[0]):
+        raise ValueError("Matrix must be square")
 
     # Traverse the matrix layer by layer
     for layer in range(n // 2):
