@@ -4,40 +4,26 @@ def rotate_2d_matrix(matrix):
     Rotate a 2D matrix 90 degrees clockwise in-place.
 
     Args:
-        matrix (list[list]): The 2D matrix to rotate. The matrix must be square.
+        matrix (list[list]): The 2D matrix to rotate.
 
     Returns:
         None: The matrix is edited in-place.
 
-    Raises:
-        ValueError: If the matrix is not square (number of rows != number of columns).
     """
+    left, right = 0, len(matrix) - 1
 
-    n = len(matrix)
-
-    if n != len(matrix[0]):
-        raise ValueError("Matrix must be square")
-
-    # Traverse the matrix layer by layer
-    for layer in range(n // 2):
-        first = layer
-        last = n - 1 - layer
-
-        # Rotate the elements in the current layer
-        for i in range(first, last):
-            offset = i - first
-
-            # Save the top element
-            top = matrix[first][i]
-
-            # Move left element to top
-            matrix[first][i] = matrix[last - offset][first]
-
-            # Move bottom element to left
-            matrix[last - offset][first] = matrix[last][last - offset]
-
-            # Move right element to bottom
-            matrix[last][last - offset] = matrix[i][last]
-
-            # Move top element to right
-            matrix[i][last] = top
+    while left < right:
+        for i in range(right - left):
+            top, bottom = left, right
+            # save top left value
+            topLeft = matrix[top][left + i]
+            # move bottom left to top left
+            matrix[top][left + i] = matrix[bottom - i][left]
+            # move bottom right to bottom left
+            matrix[bottom - i][left] = matrix[bottom][right - i]
+            # move top right to bottom right
+            matrix[bottom][right - i] = matrix[top + i][right]
+            # move top left to top right
+            matrix[top + i][right] = topLeft
+        right -= 1
+        left += 1
