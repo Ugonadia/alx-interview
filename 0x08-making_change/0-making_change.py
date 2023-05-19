@@ -1,5 +1,22 @@
 #!/usr/bin/python3
+    """
+    Calculate the fewest number of coins needed to meet a given total.
+
+    """
+
 def makeChange(coins, total):
+    """
+    Args:
+        coins (list[int]): A list of coin values.
+        total (int): The target total amount.
+
+    Returns:
+        int: The fewest number of coins needed to meet the total.
+            Returns 0 if the total is 0 or less.
+            Returns -1 if the total cannot be met by any combination of coins.
+
+    """
+
     if total <= 0:
         return 0
 
